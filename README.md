@@ -1,112 +1,192 @@
 # 文档提取工具
 
-从受限制的云桌面环境（如 VMware Horizon Client）提取 Word 文档内容。
+从受限制的云桌面环境（如 VMware Horizon Client）自动提取文档内容的现代化工具。
 
-## 功能
+## 🌟 特性
 
-- 📸 自动截图指定区域
-- 🔄 自动滚动文档
-- 🔍 OCR 识别文字（支持中英文）
-- 💾 保存为文本文件
-- 🤖 支持 API OCR（智谱/DeepSeek）- 识别率更高，支持表格和公式
-- 🖥️ 图形界面操作
+- 📸 **智能截图** - 自动捕获指定区域，支持全屏、半屏、自定义选择
+- 🔄 **自动滚动** - 智能文档滚动，可调节间隔和方向
+- 🔍 **多引擎 OCR** - 支持 Tesseract、智谱 AI、DeepSeek、OpenAI
+- 🖥️ **现代 GUI** - 直观的图形界面，实时预览和状态显示
+- 💻 **双模式** - GUI 和命令行两种使用方式
+- 🚀 **高性能** - 模块化设计，线程安全，内存优化
 
----
+## 📁 项目结构
 
-## 快速开始（GUI 版本）
-
-### 运行 GUI 版本
-
-```bash
-python doc_extractor_gui.py
+```
+Claude-Document-Extractor/
+├── src/                      # 源代码
+│   ├── core/                 # 核心功能
+│   │   ├── capture.py       # 屏幕捕获
+│   │   ├── ocr.py           # OCR 识别
+│   │   ├── scrolling.py     # 文档滚动
+│   │   └── config.py        # 配置管理
+│   ├── gui/                 # 图形界面
+│   │   ├── app.py           # 主应用
+│   │   ├── styles.py        # 样式系统
+│   │   └── dialogs.py       # 对话框组件
+│   ├── utils/               # 工具模块
+│   └── tools/               # 独立工具
+├── config/                  # 配置文件
+├── docs/                    # 详细文档
+├── scripts/                 # 启动脚本
+└── main.py                  # 主入口
 ```
 
-### 打包成 .app 应用
+## 🚀 快速开始
+
+### 安装依赖
 
 ```bash
-# 1. 安装 py2app
+pip install -r requirements.txt
+```
+
+### 运行应用
+
+#### GUI 模式（推荐）
+```bash
+# 方式1：直接运行
+python main.py --mode gui
+
+# 方式2：使用脚本
+python scripts/run_gui.py
+```
+
+#### 命令行模式
+```bash
+# 基本使用
+python main.py --mode cli --area 100,100,800,600
+
+# 使用特定 OCR 提供商
+python main.py --mode cli --provider zhipu --scroll-interval 2.0
+```
+
+## 🎯 使用指南
+
+### 1. 截图区域选择
+
+```bash
+# 运行区域选择工具
+python src/tools/area_selector.py
+```
+
+### 2. 配置 API
+
+创建 `config/api_config.json`：
+```json
+{
+  "enabled": true,
+  "provider": "zhipu",
+  "api_key": "your-api-key",
+  "base_url": "https://open.bigmodel.cn/api/paas/v4",
+  "model": "glm-4v"
+}
+```
+
+### 3. 开始提取
+
+1. 启动 GUI 应用
+2. 选择截图区域
+3. 配置 OCR 设置
+4. 点击"开始提取"
+
+## 🔧 配置选项
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--mode` | 运行模式 (gui/cli) | gui |
+| `--area` | 截图区域 (x,y,w,h) | 全屏 |
+| `--provider` | OCR 提供商 | tesseract |
+| `--scroll-interval` | 滚动间隔（秒） | 3.0 |
+| `--scroll-direction` | 滚动方向 (up/down) | down |
+| `--output` | 输出目录 | 自动生成 |
+| `--debug` | 调试模式 | false |
+
+## 📊 OCR 对比
+
+| 提供商 | 速度 | 精度 | 成本 | 特色 |
+|--------|------|------|------|------|
+| Tesseract | ⚡ 快 | 📝 中 | 免费 | 本地，无需网络 |
+| 智谱 AI | 🐢 中 | 🎯 高 | ¥12/百万 tokens | 支持表格、公式 |
+| DeepSeek | 🐢 中 | 🎯 高 | ¥1/百万 tokens | 性价比高 |
+| OpenAI | 🐢 慢 | 🎯 最高 | $10/百万 tokens | GPT-4V 质量 |
+
+## 📦 打包应用
+
+### macOS 应用
+```bash
+# 安装 py2app
 pip install py2app
 
-# 2. 打包
+# 打包
 python setup.py py2app
 
-# 3. 完成！app 在 dist/ 目录下
+# 应用在 dist/ 目录下
 open dist/
 ```
 
-将 `文档提取工具.app` 拖到 Applications 文件夹，像普通 Mac 应用一样使用！
-
----
-
-## 使用说明
-
-### 首次使用
-
-1. **启动应用**
-2. **点击「选择区域」**
-   - 用鼠标拖动框选你的文档内容区域
-   - 松开鼠标完成选择
-3. **配置 API（推荐）**
-   - 点击「配置 API」
-   - 选择提供商（智谱/DeepSeek）
-   - 输入 API Key
-4. **点击「开始提取」**
-   - 5秒倒计时，确保云桌面窗口已激活
-   - 自动滚动并截图
-   - OCR 识别并显示结果
-
-### 获取 API Key
-
-| 服务 | 获取地址 | 价格 |
-|------|----------|------|
-| 智谱 AI GLM | https://open.bigmodel.cn | ¥12/百万 tokens |
-| DeepSeek | https://platform.deepseek.com | ¥1/百万 tokens |
-
----
-
-## 界面说明
-
-| 区域 | 功能 |
-|------|------|
-| 📍 截图区域 | 选择和测试截图区域 |
-| 🤖 OCR 设置 | 配置 API 或使用本地 OCR |
-| 🚀 操作 | 设置滚动间隔，开始/停止提取 |
-| 📊 状态 | 显示当前进度和状态 |
-| 📸 预览 | 实时显示截图预览 |
-| 📄 结果 | 显示识别结果，可复制或保存 |
-| 📝 日志 | 查看操作日志 |
-
----
-
-## 命令行版本
-
-如果需要命令行版本：
-
+### Windows 可执行文件
 ```bash
-python doc_extractor.py
+pip install pyinstaller
+
+pyinstaller --onefile --windowed main.py
 ```
 
----
+## 📚 文档
 
-## 安装依赖
+- [详细文档](docs/README.md) - 完整的使用说明和 API 文档
+- [贡献指南](CONTRIBUTING.md) - 如何参与项目开发
+- [更新日志](CHANGELOG.md) - 版本更新记录
 
-```bash
-pip install pyautogui pytesseract pillow mss pyperclip keyboard openai
-brew install tesseract
-```
+## 🔍 高级功能
 
----
+### 自动检测
+- 防重复截图机制
+- 文档结束智能检测
+- 批量自动处理
 
-## 注意事项
+### 导出选项
+- 文本文件 (.txt)
+- Markdown (.md)
+- JSON 元数据 (.json)
+- 带时间戳的批量保存
 
-- ⚠️ 使用前请确保符合公司 IT 政策
-- ⚠️ 避免处理敏感或机密信息
-- ⚠️ API 方式需要网络连接
-- ⚠️ .app 应用首次运行可能需要允许权限
+### 日志系统
+- 详细的操作日志
+- 错误追踪和调试
+- 可配置的日志级别
 
----
+## 💡 最佳实践
 
-## 配置文件
+1. **区域选择**：选择稳定的文档区域，避免包含滚动条
+2. **OCR 选择**：重要文档推荐使用 API，质量更高
+3. **网络优化**：API 模式确保网络稳定
+4. **内存管理**：处理大量文档时注意内存使用
 
-- `area_config.txt` - 截图区域配置
-- `api_config.json` - API 配置（包含 API Key，请勿泄露）
+## ⚠️ 注意事项
+
+- 使用前请确保符合公司 IT 政策
+- 避免处理敏感或机密信息
+- API 需要网络连接，注意配额使用
+- 首次运行可能需要授权屏幕录制权限
+
+## 🤝 参与贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add amazing feature'`)
+4. 推送分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
+
+## 📄 许可证
+
+本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 🙏 致谢
+
+- [PyAutoGUI](https://github.com/asweigart/pyautogui) - 屏幕自动化
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - OCR 引擎
+- [Pillow](https://python-pillow.org/) - 图像处理
+- [Tkinter](https://docs.python.org/3/library/tkinter.html) - GUI 框架

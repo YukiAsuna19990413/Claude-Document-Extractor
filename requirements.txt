@@ -1,0 +1,21 @@
+# 核心依赖
+pyautogui>=0.9.53
+mss>=8.0.0
+Pillow>=9.0.0
+pytesseract>=0.3.10
+keyboard>=0.13.5
+pyperclip>=1.8.2
+openai>=1.0.0
+
+# GUI 依赖
+tkinter  # 通常随 Python 安装
+
+# 开发依赖
+black>=23.0.0
+flake8>=5.0.0
+pytest>=7.0.0
+mypy>=1.0.0
+
+# 可选依赖
+pyinstaller>=5.0.0  # 打包工具
+py2app>=0.28.6      # macOS 应用打包
