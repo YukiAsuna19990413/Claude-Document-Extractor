@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "provider": "zhipu",
+  "api_key": "e832492dc8384f0fb5e70cd3c81e24d3.q1XboZQ7ehUby8Ls",
+  "base_url": "https://open.bigmodel.cn/api/paas/v4",
+  "model": "glm-4-air"
+}

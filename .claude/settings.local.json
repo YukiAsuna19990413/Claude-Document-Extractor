@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip list *)",
+      "Bash(pip3 list *)",
+      "Bash(pip3 install *)",
+      "Bash(pip3 show *)",
+      "Bash(/Library/Developer/CommandLineTools/usr/bin/python3 *)",
+      "Bash(python3 *)",
+      "Bash(pkill -f \"doc_extractor_gui.py\")",
+      "Bash(pkill -9 -f \"doc_extractor_gui.py\")",
+      "Bash(pkill -9 -f \"Python.*doc_extractor\")",
+      "Bash(claude config *)"
+    ]
+  }
+}
